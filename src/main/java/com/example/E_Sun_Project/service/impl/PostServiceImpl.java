@@ -1,12 +1,14 @@
 package com.example.E_Sun_Project.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.example.E_Sun_Project.constant.RtnCode;
@@ -18,6 +20,7 @@ import com.example.E_Sun_Project.service.ifs.PostService;
 
 import com.example.E_Sun_Project.vo.postVo.AddPostResponse;
 import com.example.E_Sun_Project.vo.postVo.DelPostResponse;
+import com.example.E_Sun_Project.vo.postVo.GetPostResponse;
 import com.example.E_Sun_Project.vo.postVo.UpdatePostResponse;
 
 @Service
@@ -95,6 +98,18 @@ public class PostServiceImpl implements PostService {
 		
 		
 		return new UpdatePostResponse(RtnCode.SUCCESSFUL.getMessage(), postDao.save(res));
+	}
+
+	@Override
+	public GetPostResponse getAllPost() {
+		
+		
+		List<Post> res = postDao.findAll();
+		
+		if(CollectionUtils.isEmpty(res)) {
+			return new GetPostResponse(RtnCode.NOT_FOUND.getMessage(), res);
+		}
+		return new GetPostResponse(RtnCode.SUCCESSFUL.getMessage(), res);
 	}
 
 }
