@@ -3,6 +3,7 @@ package com.example.E_Sun_Project.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.E_Sun_Project.constant.RtnCode;
 import com.example.E_Sun_Project.entity.User;
 import com.example.E_Sun_Project.service.ifs.UserService;
+import com.example.E_Sun_Project.vo.userVo.GetUserResponse;
 import com.example.E_Sun_Project.vo.userVo.LoginRequest;
 import com.example.E_Sun_Project.vo.userVo.LoginResponse;
 import com.example.E_Sun_Project.vo.userVo.RegisterRequest;
@@ -18,6 +20,7 @@ import com.example.E_Sun_Project.vo.userVo.UpdateRequest;
 import com.example.E_Sun_Project.vo.userVo.UpdateResponse;
 
 
+@CrossOrigin
 @RestController
 public class UserController {
 
@@ -45,6 +48,12 @@ public class UserController {
 	@PostMapping(value = "update_info")
 	public UpdateResponse updateInfo(@RequestBody UpdateRequest request,HttpSession session) {
 		return userService.updateInfo(request.getUser(),session);
+	}
+	
+	
+	@PostMapping(value = "get_user_info")
+	public GetUserResponse getUserInfo(HttpSession session) {
+		return userService.getUserInfo(session);
 	}
 	
 }

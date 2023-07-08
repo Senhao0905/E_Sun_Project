@@ -14,6 +14,7 @@ import com.example.E_Sun_Project.constant.RtnCode;
 import com.example.E_Sun_Project.entity.User;
 import com.example.E_Sun_Project.repository.UserDao;
 import com.example.E_Sun_Project.service.ifs.UserService;
+import com.example.E_Sun_Project.vo.userVo.GetUserResponse;
 import com.example.E_Sun_Project.vo.userVo.LoginResponse;
 import com.example.E_Sun_Project.vo.userVo.RegisterResponse;
 import com.example.E_Sun_Project.vo.userVo.UpdateResponse;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
 		String patternPwd = "^(?=.+[\\p{Punct}])(?!.*[\\s\\t\\r\\n\\f])[\\p{Print}]{8,12}$";
 
 		String patternUserId = "[0-9]{10}";
-		
+
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// 檢查輸入是否為空
@@ -39,12 +40,16 @@ public class UserServiceImpl implements UserService {
 				|| !StringUtils.hasText(userName)) {
 			return new RegisterResponse(RtnCode.CANNOT_EMPTY.getMessage());
 		}
-		
-		//檢查帳號是否為電話號碼
-		if(!userId.matches(patternUserId)) {
+
+		// 檢查帳號是否為電話號碼
+		if (!userId.matches(patternUserId)) {
 			return new RegisterResponse(RtnCode.DATA_ERROR.getMessage());
 		}
 
+		boolean check = userDao.existsById(userId);
+		if (check) {
+			return new RegisterResponse(RtnCode.USER_ID_EXISTS.getMessage());
+		}
 		// 檢查密碼是否符合正規
 		if (!userPwd.matches(patternPwd)) {
 			return new RegisterResponse(RtnCode.DATA_ERROR.getMessage());
@@ -72,7 +77,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> op = userDao.findById(userId);
 
 		// 判斷帳號是否存在
-		if (op == null) {
+		if (op.isEmpty()) {
 			return new LoginResponse(RtnCode.NOT_FOUND.getMessage());
 		}
 
@@ -86,14 +91,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UpdateResponse updateInfo(User user , HttpSession session) {
+	public UpdateResponse updateInfo(User user, HttpSession session) {
 
-		//檢查是否登入過
+		// 檢查是否登入過
 		String account = (String) session.getAttribute("account");
-		
+
 		String pwd = (String) session.getAttribute("pwd");
-		
-		
+
 		if (!StringUtils.hasText(account) || !StringUtils.hasText(pwd)) {
 			return new UpdateResponse(RtnCode.PLEASE_LOGIN_FIRST.getMessage());
 		}
@@ -103,8 +107,8 @@ public class UserServiceImpl implements UserService {
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// 檢查輸入是否為空
-		if (!StringUtils.hasText(user.getUserId()) || !StringUtils.hasText(user.getUserPwd()) || !StringUtils.hasText(user.getUserEmail())
-				|| !StringUtils.hasText(user.getUserName())) {
+		if (!StringUtils.hasText(user.getUserId()) || !StringUtils.hasText(user.getUserPwd())
+				|| !StringUtils.hasText(user.getUserEmail()) || !StringUtils.hasText(user.getUserName())) {
 			return new UpdateResponse(RtnCode.CANNOT_EMPTY.getMessage());
 		}
 
@@ -116,13 +120,34 @@ public class UserServiceImpl implements UserService {
 		// 密碼加密
 		String encoderPwd = passwordEncoder.encode(user.getUserPwd());
 
-		//自我介紹為null的話設定為空字串
+		// 自我介紹為null的話設定為空字串
 		String Biography = StringUtils.hasText(user.getUserBiography()) ? user.getUserBiography() : "";
-		
+
 		// 建立User
 		User newUser = new User(user.getUserId(), user.getUserName(), user.getUserEmail(), encoderPwd, Biography);
 
 		return new UpdateResponse(RtnCode.SUCCESSFUL.getMessage(), userDao.save(newUser));
+	}
+
+	@Override
+	public GetUserResponse getUserInfo(HttpSession session) {
+		// 檢查是否登入過
+		String account = (String) session.getAttribute("account");
+
+		String pwd = (String) session.getAttribute("pwd");
+
+		if (!StringUtils.hasText(account) || !StringUtils.hasText(pwd)) {
+			return new GetUserResponse(RtnCode.PLEASE_LOGIN_FIRST.getMessage());
+		}
+		
+		Optional<User> op = userDao.findById(account);
+		
+		if(op.isEmpty()) {
+			return new GetUserResponse(RtnCode.NOT_FOUND.getMessage());
+		}
+		
+		
+		return new GetUserResponse(RtnCode.SUCCESSFUL.getMessage(),op.get());
 	}
 
 }

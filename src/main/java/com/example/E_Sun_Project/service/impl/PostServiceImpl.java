@@ -104,7 +104,7 @@ public class PostServiceImpl implements PostService {
 	public GetPostResponse getAllPost() {
 		
 		
-		List<Post> res = postDao.findAll();
+		List<Post> res = postDao.SearchAllPost();
 		
 		if(CollectionUtils.isEmpty(res)) {
 			return new GetPostResponse(RtnCode.NOT_FOUND.getMessage(), res);
