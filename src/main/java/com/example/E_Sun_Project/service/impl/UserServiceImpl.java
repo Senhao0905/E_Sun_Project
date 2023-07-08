@@ -30,12 +30,19 @@ public class UserServiceImpl implements UserService {
 		// 8~12碼 至少包含一個特殊符號
 		String patternPwd = "^(?=.+[\\p{Punct}])(?!.*[\\s\\t\\r\\n\\f])[\\p{Print}]{8,12}$";
 
+		String patternUserId = "[0-9]{10}";
+		
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// 檢查輸入是否為空
 		if (!StringUtils.hasText(userId) || !StringUtils.hasText(userPwd) || !StringUtils.hasText(userEmail)
 				|| !StringUtils.hasText(userName)) {
 			return new RegisterResponse(RtnCode.CANNOT_EMPTY.getMessage());
+		}
+		
+		//檢查帳號是否為電話號碼
+		if(!userId.matches(patternUserId)) {
+			return new RegisterResponse(RtnCode.DATA_ERROR.getMessage());
 		}
 
 		// 檢查密碼是否符合正規

@@ -7,8 +7,8 @@ public enum RtnCode {
 	DATA_ERROR("400","Data is error!!"),
 	DATE_ERROR("400","Date is error ! "),
 	NOT_FOUND("404","Not found"),
-	USER_NOT_EXISTS("400","User is not exists !"),
-	PWD_ERROR("400","Password Incorrect !"),
+	USER_NOT_EXISTS("400","Password or Account Incorrect !"),
+	PWD_ERROR("400","Password or Account Incorrect !"),
 	PLEASE_LOGIN_FIRST("400","Plz Login !"),
 	ERROR("400","Error  ! ");
 	
