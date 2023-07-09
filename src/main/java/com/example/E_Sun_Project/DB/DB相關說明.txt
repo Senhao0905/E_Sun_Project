@@ -1,0 +1,16 @@
+資料庫 : mySql
+application.properties 的 mySql配置:
+
+	#請先建立一個名稱為 'e_sun_project' 的 schema
+	
+	spring.datasource.url=jdbc:mysql://localhost:3306/e_sun_project?serverTimezone=GMT%2B8&useSSL=false
+	spring.datasource.username=root
+	spring.datasource.password=root
+	spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+	spring.jpa.show-sql=true
+
+
+	#mySql 自動生成Table
+	spring.sql.init.schema-locations=classpath:schema-mysql.sql
+	#[always][embedded][never]
+	spring.sql.init.mode=always

@@ -1,0 +1,13 @@
+User:
+
+JPA 內建語法 
+
+POST:
+
+JPA 內建語法,
+select * from post order by post_id desc;
+
+COMMENT:
+JPA 內建語法,
+                                      (自帶參數)
+select * from comment where post_id = :postId order by comment_id desc ;
