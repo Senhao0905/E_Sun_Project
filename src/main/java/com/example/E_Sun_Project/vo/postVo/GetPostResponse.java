@@ -9,6 +9,8 @@ public class GetPostResponse {
 	private String message;
 
 	private List<Post> posts;
+	
+	private Post post ;
 
 	public GetPostResponse() {
 		super();
@@ -26,9 +28,24 @@ public class GetPostResponse {
 		this.posts = posts;
 	}
 
+	public GetPostResponse(String message, Post post) {
+		super();
+		this.message = message;
+		this.post = post;
+	}
+
 	// --------------------------------
+	
 	public String getMessage() {
 		return message;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 	public void setMessage(String message) {

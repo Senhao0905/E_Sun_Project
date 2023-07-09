@@ -2,6 +2,7 @@ package com.example.E_Sun_Project.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -83,8 +84,8 @@ public class PostServiceImpl implements PostService {
 		if (!StringUtils.hasText(userId) || !StringUtils.hasText(pwd)) {
 			return new UpdatePostResponse(RtnCode.PLEASE_LOGIN_FIRST.getMessage());
 		}
-		
-		if(!StringUtils.hasText(content)) {
+
+		if (!StringUtils.hasText(content)) {
 			return new UpdatePostResponse(RtnCode.CANNOT_EMPTY.getMessage());
 		}
 		Post res = postDao.findByPostIdAndUserId(postId, userId);
@@ -92,23 +93,64 @@ public class PostServiceImpl implements PostService {
 		if (res == null) {
 			return new UpdatePostResponse(RtnCode.NOT_FOUND.getMessage());
 		}
-		
+
 		res.setContent(content);
 		res.setCreatedTime(LocalDateTime.now());
-		
-		
+
 		return new UpdatePostResponse(RtnCode.SUCCESSFUL.getMessage(), postDao.save(res));
 	}
 
 	@Override
 	public GetPostResponse getAllPost() {
-		
-		
+
 		List<Post> res = postDao.SearchAllPost();
-		
-		if(CollectionUtils.isEmpty(res)) {
+
+		if (CollectionUtils.isEmpty(res)) {
 			return new GetPostResponse(RtnCode.NOT_FOUND.getMessage(), res);
 		}
+		return new GetPostResponse(RtnCode.SUCCESSFUL.getMessage(), res);
+	}
+
+	@Override
+	public GetPostResponse getPostByPostId(int postId, HttpSession session) {
+
+		// 檢查是否登入過
+		String userId = (String) session.getAttribute("account");
+
+		String pwd = (String) session.getAttribute("pwd");
+
+		if (!StringUtils.hasText(userId) || !StringUtils.hasText(pwd)) {
+			return new GetPostResponse(RtnCode.PLEASE_LOGIN_FIRST.getMessage());
+		}
+
+		Optional<Post> op = postDao.findById(postId);
+
+		if (op.isEmpty()) {
+			return new GetPostResponse(RtnCode.NOT_FOUND.getMessage());
+		}
+
+		return new GetPostResponse(RtnCode.SUCCESSFUL.getMessage(), op.get());
+	}
+
+	@Override
+	public GetPostResponse getPostByUser(int postId, HttpSession session) {
+
+		// 檢查是否登入過
+		String userId = (String) session.getAttribute("account");
+
+		String pwd = (String) session.getAttribute("pwd");
+
+		if (!StringUtils.hasText(userId) || !StringUtils.hasText(pwd)) {
+			return new GetPostResponse(RtnCode.PLEASE_LOGIN_FIRST.getMessage());
+		}
+
+		Post res = postDao.findByPostIdAndUserId(postId, userId);
+		
+		if(res == null) {
+			return new GetPostResponse(RtnCode.NOT_FOUND.getMessage());
+		}
+		
+		
 		return new GetPostResponse(RtnCode.SUCCESSFUL.getMessage(), res);
 	}
 

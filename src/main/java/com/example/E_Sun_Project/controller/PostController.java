@@ -48,5 +48,15 @@ public class PostController {
 		return postService.getAllPost();
 	}
 	
+	@PostMapping(value = "get_post_by_postID")
+	public GetPostResponse getPostByPostId(@RequestBody UpdatePostRequest request , HttpSession session) {
+		return postService.getPostByPostId(request.getPostId(), session);
+	}
+	
+	@PostMapping(value = "get_post_by_user")
+	public GetPostResponse getPostByUser(@RequestBody UpdatePostRequest request , HttpSession session) {
+		return postService.getPostByUser(request.getPostId(), session);
+	}
+	
 	
 }

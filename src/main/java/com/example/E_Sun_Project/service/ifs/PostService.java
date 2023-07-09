@@ -18,4 +18,8 @@ public interface PostService {
 	public UpdatePostResponse updatePost(int postId,String content , HttpSession session);
 	
 	public GetPostResponse getAllPost();
+	
+	public GetPostResponse getPostByPostId(int postId , HttpSession session);
+	
+	public GetPostResponse getPostByUser(int postId , HttpSession session);
 }

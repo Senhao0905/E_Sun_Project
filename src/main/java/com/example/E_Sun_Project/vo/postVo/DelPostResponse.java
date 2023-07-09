@@ -1,6 +1,6 @@
 package com.example.E_Sun_Project.vo.postVo;
 
-import com.example.E_Sun_Project.entity.Post;
+
 
 public class DelPostResponse {
 

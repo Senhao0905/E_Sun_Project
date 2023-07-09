@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.E_Sun_Project.constant.RtnCode;
-import com.example.E_Sun_Project.entity.User;
 import com.example.E_Sun_Project.service.ifs.UserService;
 import com.example.E_Sun_Project.vo.userVo.GetUserResponse;
 import com.example.E_Sun_Project.vo.userVo.LoginRequest;
